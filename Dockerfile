@@ -1,12 +1,19 @@
 # shadowsocks-net-speeder
-
-FROM ubuntu:16.04
+FROM ubuntu:14.04.3
 RUN apt-get update && \
-    apt-get install -y python-pip libsodium-dev
+    apt-get install -y python-pip libnet1 libnet1-dev libpcap0.8 libpcap0.8-dev git
 
-RUN pip install https://github.com/shadowsocks/shadowsocks/archive/master.zip -U
+RUN pip install shadowsocks==2.8.2
 
-RUN echo '{"server":"::", "server_port":8788, "local_address": "127.0.0.1", "local_port":1080, "password":"no@10wxhcgl", "timeout":300, "method":"chacha20-ietf-poly1305", "fast_open": true }' > /etc/shadowsocks.json
+RUN git clone https://github.com/snooda/net-speeder.git net-speeder
+WORKDIR net-speeder
+RUN sh build.sh
 
-ENTRYPOINT ["ss-server", "-c", "/etc/shadowsocks.json"]
+RUN mv net_speeder /usr/local/bin/
+COPY entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/net_speeder
+
+# Configure container to run as an executable
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
