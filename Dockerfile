@@ -10,5 +10,3 @@ RUN echo '{"server":"::", "server_port":8788, "local_address": "127.0.0.1", "loc
 
 RUN ssserver -c /etc/shadowsocks.json -d start
 
-# Configure container to run as an executable
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
