@@ -6,14 +6,9 @@ RUN apt-get update && \
 
 RUN pip install https://github.com/shadowsocks/shadowsocks/archive/master.zip -U
 
-RUN git clone https://github.com/snooda/net-speeder.git net-speeder
-WORKDIR net-speeder
-RUN sh build.sh
+RUN echo '{"server":"::", "server_port":8788, "local_address": "127.0.0.1", "local_port":1080, "password":"no@10wxhcgl", "timeout":300, "method":"chacha20-ietf-poly1305", "fast_open": true }' > /etc/shadowsocks.json
 
-RUN mv net_speeder /usr/local/bin/
-COPY entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/net_speeder
+RUN ssserver -c /etc/shadowsocks.json -d start
 
 # Configure container to run as an executable
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
