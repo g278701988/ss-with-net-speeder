@@ -1,6 +1,7 @@
 # shadowsocks-net-speeder
 
 FROM ubuntu:16.04
+WORKDIR /
 RUN apt-get update && \
     apt-get install -y python-pip libsodium-dev
 
